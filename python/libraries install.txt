@@ -1,3 +1,47 @@
 
 
 pip install mysql-connector-python pandas scikit-learn
+
+
+
+
+APP Flow 
+
+
+astraal-adaptive-engine/
+│
+├── database/
+│   └── schema.sql
+│
+├── public_html/
+│   ├── config/
+│   │   └── db.php
+│   │
+│   ├── api/
+│   │   ├── log_event.php
+│   │   ├── trigger_engine.php
+│   │   └── get_recommendations.php
+│   │
+│   ├── learning-path/
+│   │   ├── learning_intent.php
+│   │   ├── milestones.php
+│   │   └── guided_pathways.php
+│   │
+│   ├── faculty/
+│   │   ├── learner_journey.php
+│   │   ├── override.php
+│   │   └── save_override.php
+│   │
+│   └── dashboard.php
+│
+├── python/
+│   ├── feature_builder.py
+│   ├── ranker.py
+│   ├── run_engine.py
+│   ├── train_model.py
+│   ├── training_data.csv
+│   └── model.pkl
+│
+└── cron/
+    └── nightly_engine.php
+

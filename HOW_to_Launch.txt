@@ -1,0 +1,206 @@
+Perfect. Let’s now define exactly how to launch and execute the Adaptive Learning Journey Engine (ALJE) — the first system we built (not PCSE).
+
+This aligns with your adaptiveLP.docx orchestration design
+
+✅ TL;DR — How to Launch the Adaptive Learning Path Engine
+
+You execute it in 4 clear stages:
+
+Setup database
+
+Train ML model (once)
+
+Trigger Python engine (manual / PHP / cron)
+
+View dashboard
+
+That’s it.
+
+Below is the full production execution flow.
+
+🧱 STEP 1 — Setup Database
+
+Import:
+
+/database/schema.sql
+
+
+Using:
+
+phpMyAdmin (UWAMP)
+
+GoDaddy cPanel → Import
+
+Then verify tables:
+
+learners
+learning_events
+learner_journey_state
+adaptive_recommendations
+faculty_overrides
+
+🐍 STEP 2 — Train ML Model (ONE TIME)
+
+Go inside:
+
+/python/
+
+
+Install:
+
+pip install mysql-connector-python pandas scikit-learn
+
+
+Train model:
+
+python train_model.py
+
+
+This generates:
+
+model.pkl
+
+
+You only retrain when updating model logic.
+
+▶ STEP 3 — Execute Adaptive Engine
+
+You have 3 ways to run it.
+
+OPTION A — Manual CLI (Testing Mode)
+
+From /python/:
+
+python run_engine.py 1
+
+
+Where:
+
+1 = learner_id
+
+
+After execution, check DB:
+
+SELECT * FROM adaptive_recommendations;
+
+
+You should see ranked journey actions.
+
+OPTION B — Via PHP (Production Mode)
+
+Open browser:
+
+http://localhost/astraal-adaptive-engine/public_html/api/trigger_engine.php
+
+
+OR on GoDaddy:
+
+https://yourdomain.com/api/trigger_engine.php
+
+
+That PHP file runs:
+
+exec("python3 /home/username/python/run_engine.py $learner_id");
+
+
+Then redirects to dashboard.
+
+OPTION C — Nightly Cron (Recommended)
+
+GoDaddy → cPanel → Cron Jobs
+
+Add:
+
+php /home/username/public_html/cron/nightly_engine.php
+
+
+Schedule:
+
+Every night at 2 AM
+
+Or every 6 hours
+
+This recalculates all learners.
+
+🖥 STEP 4 — View Dashboard
+
+Open:
+
+/public_html/dashboard.php
+
+
+You will see:
+
+Journey state
+
+Top recommendations
+
+Rationale
+
+Trigger button
+
+🔄 FULL EXECUTION FLOW
+Learner clicks / interacts
+        ↓
+learning_events table updated
+        ↓
+run_engine.py executes
+        ↓
+Features built
+        ↓
+ML ranking
+        ↓
+adaptive_recommendations updated
+        ↓
+dashboard.php renders results
+
+🧪 QUICK TEST DATA (Minimal Demo Setup)
+
+Insert learner:
+
+INSERT INTO learners (name,email)
+VALUES ('Test Learner','test@example.com');
+
+
+Insert test events:
+
+INSERT INTO learning_events
+(learner_id,event_type,event_value,source)
+VALUES
+(1,'learning_intent',1,'UI'),
+(1,'milestone_completed',1,'UI');
+
+
+Then run:
+
+python run_engine.py 1
+
+
+Now check:
+
+SELECT * FROM adaptive_recommendations;
+
+⚠ COMMON ISSUES
+1️⃣ "python3 not found"
+
+On GoDaddy use full path:
+
+exec("/usr/local/bin/python3 /home/username/python/run_engine.py 1");
+
+2️⃣ No recommendations generated
+
+Check:
+
+model.pkl exists
+
+DB credentials correct
+
+learning_events not empty
+
+3️⃣ learner_journey_state not updating
+
+Currently engine only writes recommendations.
+
+If you want full state recalculation — we can extend run_engine.py to update:
+
+learner_journey_state
