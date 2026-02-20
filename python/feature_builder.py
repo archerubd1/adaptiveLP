@@ -4,12 +4,11 @@ import pandas as pd
 def build_features(learner_id):
 
     db = mysql.connector.connect(
-        host="localhost",
-        user="db_user",
-        password="db_password",
-        database="astraal_lxp"
-    )
-
+    host="localhost",
+    user="root",
+    password="root",
+    database="astraal_lxp"
+)
     query = f"""
     SELECT
         COUNT(*) as engagement_score

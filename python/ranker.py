@@ -5,7 +5,13 @@ model = pickle.load(open("model.pkl", "rb"))
 
 def rank(df):
 
-    features = df.values
+    features = df[[
+        "intent_score",
+        "skill_gap_score",
+        "engagement_score",
+        "milestone_progress",
+        "pathway_confidence"
+    ]].values
 
     probabilities = model.predict_proba(features)[:, 1]
 
