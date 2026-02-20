@@ -37,7 +37,7 @@ $row_count = $courses_count_res->fetch_assoc();
             <a href="coding-ground.php" class="flex items-center gap-4 p-4 text-slate-400 hover:bg-slate-50 transition rounded-2xl">
                 <i class="fas fa-code"></i> Coding Ground
             </a>
-        </nav>
+            </nav>
     </aside>
 
     <main class="flex-1 p-12">
@@ -71,14 +71,13 @@ $row_count = $courses_count_res->fetch_assoc();
                     <p class="text-slate-400 text-sm mt-4 font-medium leading-relaxed"><?php echo $c['description']; ?></p>
                 </div>
                 
-                <button class="w-full py-4 mt-8 bg-slate-900 text-white font-black rounded-2xl shadow-lg shadow-slate-200 hover:bg-<?php echo $theme; ?>-600 transition-all text-sm uppercase tracking-widest">
+                <a href="course-details.php?id=<?php echo $c['id']; ?>" 
+                   class="w-full py-4 mt-8 bg-slate-900 text-white font-black rounded-2xl text-center shadow-lg hover:bg-<?php echo $theme; ?>-600 transition-all text-sm uppercase tracking-widest block">
                     Start Learning
-                </button>
+                </a>
             </div>
             <?php 
                 endwhile;
-            else:
-                echo "<p class='text-slate-400'>No courses found in database.</p>";
             endif;
             ?>
         </div>
